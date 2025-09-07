@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Categories</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Manage Categories</h2>
+        <ul id="category-list"></ul>
+
+        <h3>Add New Category</h3>
+        <form id="category-form">
+            <input type="text" id="new-category" placeholder="Enter category name..." required>
+            <button class="btn">Add Category</button>
+        </form>
+
+        <a href="index.html">← Back to Tracker</a>
+    </div>
+
+    <script>
+        const categoryList = document.getElementById('category-list');
+        const categoryForm = document.getElementById('category-form');
+        const newCategory = document.getElementById('new-category');
+
+        let categories = JSON.parse(localStorage.getItem('categories')) || ['Food', 'Transport', 'Shopping', 'Salary'];
+
+        function displayCategories() {
+            categoryList.innerHTML = '';
+            categories.forEach((cat, index) => {
+                const li = document.createElement('li');
+                li.innerHTML = `${cat} <button onclick="removeCategory(${index})">x</button>`;
+                categoryList.appendChild(li);
+            });
+        }
+
+        function removeCategory(index) {
+            categories.splice(index, 1);
+            localStorage.setItem('categories', JSON.stringify(categories));
+            displayCategories();
+        }
+
+        categoryForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const cat = newCategory.value.trim();
+            if (cat && !categories.includes(cat)) {
+                categories.push(cat);
+                localStorage.setItem('categories', JSON.stringify(categories));
+                newCategory.value = '';
+                displayCategories();
+            }
+        });
+
+        displayCategories();
+    </script>
+</body>
+</html>
